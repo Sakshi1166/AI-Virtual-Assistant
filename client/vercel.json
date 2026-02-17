@@ -1,0 +1,6 @@
+{
+  "buildCommand": "npm run build",
+  "env": {
+    "VITE_API_BASE_URL": "https://ai-virtual-assistant-server.onrender.com/api"
+  }
+}
