@@ -40,6 +40,15 @@ app.use(morgan('dev'));
 const uploadsDir = path.join(process.cwd(), 'uploads');
 app.use('/uploads', express.static(uploadsDir));
 
+// Root route
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'AI Virtual Assistant API Server',
+    status: 'running',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
