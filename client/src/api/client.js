@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Use proxy in dev (relative /api) so Vite forwards to backend; avoids CORS & port mismatch
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? '/api' : 'http://localhost:5000/api');
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? '/api' : 'https://ai-virtual-assistant-server.onrender.com/api');
 
 const api = axios.create({
   baseURL: apiBaseUrl,
