@@ -17,16 +17,20 @@ dotenv.config();
 const app = express();
 
 // Basic security and parsing middleware
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: false, // Allow CORS
+}));
 app.use(cors({
   origin: (origin, cb) => {
     const configured = process.env.CLIENT_ORIGIN;
     if (!origin) return cb(null, true);
     if (configured && origin === configured) return cb(null, true);
     if (/^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin)) return cb(null, true);
-    return cb(new Error('Not allowed by CORS'));
+    return cb(null, true); // Allow any origin for now to debug
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.use(express.json({ limit: '1mb' }));
 app.use(cookieParser());
