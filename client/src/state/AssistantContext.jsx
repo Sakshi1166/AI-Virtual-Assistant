@@ -58,22 +58,13 @@ export function AssistantProvider({ children }) {
   const [awake, setAwake] = useState(false);
   const [rawTranscript, setRawTranscript] = useState('');
 
-  const [shouldProcessCommand, setShouldProcessCommand] = useState(false);
-
   const handleSpeechResult = useCallback((text, isFinal) => {
     setRawTranscript(text);
     if (isFinal) {
+      // Logic for auto-processing if awake
       console.log('[Assistant] Final speech result:', text);
     }
   }, []);
-
-  // Handle when speech recognition ends
-  const handleSpeechEnd = useCallback(() => {
-    if (awake && rawTranscript.trim()) {
-      console.log('[Assistant] Speech ended, will process command:', rawTranscript);
-      setShouldProcessCommand(true);
-    }
-  }, [awake, rawTranscript]);
 
   const {
     supported: sttSupported,
@@ -84,7 +75,6 @@ export function AssistantProvider({ children }) {
   } = useSpeechRecognition({
     lang: settings?.language === 'Hindi' ? 'hi-IN' : 'en-IN',
     onResult: handleSpeechResult,
-    onEnd: handleSpeechEnd,
   });
 
   const {
@@ -203,22 +193,6 @@ export function AssistantProvider({ children }) {
       setSending(false);
     }
   };
-
-  // Process command when speech ends and we're awake
-  useEffect(() => {
-    if (!shouldProcessCommand) return;
-    
-    const command = rawTranscript.toLowerCase().includes(WAKE_WORD)
-      ? rawTranscript.substring(rawTranscript.toLowerCase().indexOf(WAKE_WORD) + WAKE_WORD.length).trim()
-      : rawTranscript.trim();
-    
-    if (command) {
-      processCommand(command);
-    }
-    
-    setRawTranscript('');
-    setShouldProcessCommand(false);
-  }, [shouldProcessCommand, rawTranscript, processCommand]);
 
   // Wake word + intent processing
   useEffect(() => {
